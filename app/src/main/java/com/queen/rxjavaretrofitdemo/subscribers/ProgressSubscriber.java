@@ -17,15 +17,13 @@ import rx.Subscriber;
  * 调用者自己对请求数据进行处理
  * Created by liukun on 16/3/10.
  */
-public class ProgressSubscriber<T> extends Subscriber<T> implements ProgressCancelListener{
+public abstract class ProgressSubscriber<T> extends Subscriber<T> implements ProgressCancelListener{
 
-    private SubscriberOnNextListener mSubscriberOnNextListener;
     private ProgressDialogHandler mProgressDialogHandler;
 
     private Context context;
 
-    public ProgressSubscriber(SubscriberOnNextListener mSubscriberOnNextListener, Context context) {
-        this.mSubscriberOnNextListener = mSubscriberOnNextListener;
+    public ProgressSubscriber( Context context) {
         this.context = context;
         mProgressDialogHandler = new ProgressDialogHandler(context, this, true);
     }
@@ -79,17 +77,6 @@ public class ProgressSubscriber<T> extends Subscriber<T> implements ProgressCanc
 
     }
 
-    /**
-     * 将onNext方法中的返回结果交给Activity或Fragment自己处理
-     *
-     * @param t 创建Subscriber时的泛型类型
-     */
-    @Override
-    public void onNext(T t) {
-        if (mSubscriberOnNextListener != null) {
-            mSubscriberOnNextListener.onNext(t);
-        }
-    }
 
     /**
      * 取消ProgressDialog的时候，取消对observable的订阅，同时也取消了http请求

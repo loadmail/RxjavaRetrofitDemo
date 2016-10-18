@@ -6,10 +6,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.queen.rxjavaretrofitdemo.R;
-import com.queen.rxjavaretrofitdemo.subscribers.ProgressSubscriber;
-import com.queen.rxjavaretrofitdemo.subscribers.SubscriberOnNextListener;
 import com.queen.rxjavaretrofitdemo.entity.Subject;
 import com.queen.rxjavaretrofitdemo.http.HttpMethods;
+import com.queen.rxjavaretrofitdemo.subscribers.ProgressSubscriber;
 
 import java.util.List;
 
@@ -24,27 +23,17 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.result_TV)
     TextView resultTV;
 
-    private SubscriberOnNextListener getTopMovieOnNext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-        getTopMovieOnNext = new SubscriberOnNextListener<List<Subject>>() {
-            @Override
-            public void onNext(List<Subject> subjects) {
-                resultTV.setText(subjects.toString());
-            }
-        };
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-
     }
 
     @Override
@@ -59,6 +48,15 @@ public class MainActivity extends AppCompatActivity {
 
     //进行网络请求
     private void getMovie(){
-        HttpMethods.getInstance().getTopMovie(new ProgressSubscriber(getTopMovieOnNext, MainActivity.this), 0, 10);
+        HttpMethods.getInstance().getTopMovie(new ProgressSubscriber(MainActivity.this) {
+
+            @Override
+            public void onNext(Object o) {
+                resultTV.setText("第3个数据的标题:"+((List<Subject>)o).get(2).getOriginal_title()
+                        +"\n"+"数据内容:"+"\n"+
+                        o.toString()
+                );
+            }
+        }, 0, 10);
     }
 }

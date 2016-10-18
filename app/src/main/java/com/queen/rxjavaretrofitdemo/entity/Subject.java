@@ -19,10 +19,10 @@ public class Subject {
 
     @Override
     public String toString() {
-        return "Subject.id=" + id
+        return "\n"+"Subject.id=" + id
                 + " Subject.title=" + title
                 + " Subject.year=" + year
-                + " Subject.originalTitle=" + original_title + casts.toString() + directors.toString() + " | ";
+                + " Subject.originalTitle=" + original_title + casts.toString() + directors.toString() + "\n";
     }
 
     public String getId() {
